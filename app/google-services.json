@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "878359826020",
+    "project_id": "techhub-f054e",
+    "storage_bucket": "techhub-f054e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878359826020:android:874db1fb7c00e18c7fd971",
+        "android_client_info": {
+          "package_name": "com.talal.techhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEcLiGx9E9qHOIVGA8k7OeG9cJ0OT078A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
