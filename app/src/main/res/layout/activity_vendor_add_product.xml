@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/soft_white">
+
+    <include layout="@layout/layout_top_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <EditText
+                android:id="@+id/productTitleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="Product title"
+                android:padding="14dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <EditText
+                android:id="@+id/productBrandEditText"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:hint="Brand"
+                android:padding="14dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <Spinner
+                android:id="@+id/categorySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <Spinner
+                android:id="@+id/subCategorySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <EditText
+                android:id="@+id/productPriceEditText"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:hint="Price"
+                android:inputType="numberDecimal"
+                android:padding="14dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <EditText
+                android:id="@+id/productStockEditText"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:hint="Stock"
+                android:inputType="number"
+                android:padding="14dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <EditText
+                android:id="@+id/productDescriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginTop="10dp"
+                android:hint="Description"
+                android:gravity="top"
+                android:padding="14dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <EditText
+                android:id="@+id/specsEditText"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginTop="10dp"
+                android:hint="Specs as key=value lines"
+                android:gravity="top"
+                android:padding="14dp"
+                android:background="@drawable/bg_dashboard_card" />
+
+            <Button
+                android:id="@+id/btnSaveProduct"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_button_black"
+                android:text="Save Product"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

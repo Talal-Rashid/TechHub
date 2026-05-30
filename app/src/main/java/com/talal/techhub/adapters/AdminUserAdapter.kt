@@ -18,6 +18,7 @@ class AdminUserAdapter(
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameText: TextView = itemView.findViewById(R.id.txtName)
         val emailText: TextView = itemView.findViewById(R.id.txtEmail)
+        val roleText: TextView = itemView.findViewById(R.id.txtRole)
         val acceptButton: Button = itemView.findViewById(R.id.btnAccept)
         val rejectButton: Button = itemView.findViewById(R.id.btnReject)
     }
@@ -30,10 +31,18 @@ class AdminUserAdapter(
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = userList[position]
-        holder.nameText.text = "Name: ${user.name}"
-        holder.emailText.text = "Email: ${user.email}"
-        holder.acceptButton.setOnClickListener { onAcceptClick(user) }
-        holder.rejectButton.setOnClickListener { onRejectClick(user) }
+
+        holder.nameText.text = user.name.ifBlank { "Unnamed Vendor" }
+        holder.emailText.text = user.email
+        holder.roleText.text = "Role: ${user.role}"
+
+        holder.acceptButton.setOnClickListener {
+            onAcceptClick(user)
+        }
+
+        holder.rejectButton.setOnClickListener {
+            onRejectClick(user)
+        }
     }
 
     override fun getItemCount(): Int = userList.size

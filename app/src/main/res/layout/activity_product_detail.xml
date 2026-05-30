@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background">
+
+    <include layout="@layout/layout_top_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/bg_dashboard_card"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/txtProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Product Name"
+                android:textColor="@color/primary_text"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtProductMeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Brand • Category"
+                android:textColor="@color/secondary_text"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtProductPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Rs 0"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtStockStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Stock status"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtRating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Rating: Not rated yet"
+                android:textColor="@color/secondary_text"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/txtDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_dashboard_card"
+                android:padding="18dp"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txtSpecs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_dashboard_card"
+                android:padding="18dp"
+                android:textColor="@color/primary_text"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnAddToCart"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_button_amber"
+        android:text="Add to Cart"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/btnBuyNow"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_button_black"
+        android:text="Buy Now"
+        android:textColor="@color/white" />
+
+</LinearLayout>

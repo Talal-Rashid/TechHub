@@ -1,5 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="amber">#FFC107</color>
+    <color name="black">#111111</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="app_background">#FAFAFA</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="primary_text">#111111</color>
+    <color name="secondary_text">#444444</color>
+    <color name="border_color">#E0E0E0</color>
+
+    <!-- old aliases so existing screens don't break -->
+    <color name="soft_white">#FAFAFA</color>
+    <color name="dark_gray">#444444</color>
+    <color name="light_gray">#E0E0E0</color>
 </resources>

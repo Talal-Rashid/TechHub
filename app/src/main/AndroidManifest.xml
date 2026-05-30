@@ -19,6 +19,18 @@
         <activity android:name=".UserHomeActivity" />
         <activity android:name=".VendorPanelActivity" />
         <activity android:name=".AdminPanelActivity" />
+        <activity android:name=".BrowseProductsActivity" />
+        <activity android:name=".ProductDetailActivity" />
+        <activity android:name=".CartActivity" />
+        <activity android:name=".CheckoutActivity" />
+        <activity android:name=".PhoneFinderActivity" />
+        <activity android:name=".PcBuilderActivity" />
+        <activity android:name=".VendorAddProductActivity" />
+        <activity android:name=".OrderHistoryActivity" />
+        <activity android:name=".VendorOrdersActivity" />
+        <activity android:name=".SettingsActivity" />
+
+
 
         <activity
             android:name=".SplashActivity"

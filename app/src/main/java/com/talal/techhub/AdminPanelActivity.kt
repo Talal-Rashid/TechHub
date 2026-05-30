@@ -2,86 +2,116 @@ package com.talal.techhub
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.*
 import com.talal.techhub.adapters.AdminUserAdapter
+import com.talal.techhub.data.FirebaseRefs
 import com.talal.techhub.models.User
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.database.ktx.database
-
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.auth.FirebaseAuth
+import android.content.Intent
+import android.widget.ImageView
 
 class AdminPanelActivity : AppCompatActivity() {
 
-    private lateinit var databaseRef: DatabaseReference
-    private lateinit var userList: MutableList<User>
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AdminUserAdapter
-    private lateinit var logoutBtn: Button
+    private val pendingVendors = mutableListOf<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
-        FirebaseDatabase.getInstance().reference // ✅ Force DB module to initialize
 
-        logoutBtn = findViewById(R.id.btnLogout)
-        logoutBtn.setOnClickListener {
-            finish()
+        findViewById<TextView>(R.id.topBarTitle).text = "TechHub"
+        findViewById<TextView>(R.id.topBarTitle).text = "Admin"
+        findViewById<ImageView>(R.id.btnProfile).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         recyclerView = findViewById(R.id.recyclerViewPendingUsers)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        userList = mutableListOf()
-        adapter = AdminUserAdapter(userList, ::approveUser, ::rejectUser)
+
+        adapter = AdminUserAdapter(
+            pendingVendors,
+            onAcceptClick = { approveVendor(it) },
+            onRejectClick = { rejectVendor(it) }
+        )
+
         recyclerView.adapter = adapter
 
-        databaseRef = FirebaseDatabase.getInstance().getReference("users")
-        loadPendingUsers()
+        findViewById<Button>(R.id.btnLogout).setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
+        loadPendingVendors()
     }
 
-    private fun loadPendingUsers() {
-        databaseRef.orderByChild("approved").equalTo(false)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun loadPendingVendors() {
+        FirebaseRefs.users
+            .orderByChild("approved")
+            .equalTo(false)
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    userList.clear()
+                    pendingVendors.clear()
+
                     for (child in snapshot.children) {
                         val user = child.getValue(User::class.java)
-                        user?.let {
-                            it.id = child.key  // set ID manually
-                            userList.add(it)
+
+                        if (user != null && user.role == "vendor") {
+                            user.id = child.key
+                            pendingVendors.add(user)
                         }
                     }
+
                     adapter.notifyDataSetChanged()
+
+                    if (pendingVendors.isEmpty()) {
+                        Toast.makeText(
+                            this@AdminPanelActivity,
+                            "No pending vendors",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(this@AdminPanelActivity, "Failed to load users", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@AdminPanelActivity,
+                        "Failed to load vendors: ${error.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             })
     }
 
-    private fun approveUser(user: User) {
-        user.id?.let {
-            databaseRef.child(it).child("approved").setValue(true)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "${user.name} approved", Toast.LENGTH_SHORT).show()
-                    userList.remove(user)
-                    adapter.notifyDataSetChanged()
-                }
-        }
+    private fun approveVendor(user: User) {
+        val uid = user.id ?: return
+
+        FirebaseRefs.users.child(uid).child("approved").setValue(true)
+            .addOnSuccessListener {
+                Toast.makeText(this, "${user.name} approved", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Approval failed: ${it.message}", Toast.LENGTH_LONG).show()
+            }
     }
 
-    private fun rejectUser(user: User) {
-        user.id?.let {
-            databaseRef.child(it).removeValue()
-                .addOnSuccessListener {
-                    Toast.makeText(this, "${user.name} rejected", Toast.LENGTH_SHORT).show()
-                    userList.remove(user)
-                    adapter.notifyDataSetChanged()
-                }
-        }
+    private fun rejectVendor(user: User) {
+        val uid = user.id ?: return
+
+        FirebaseRefs.users.child(uid).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this, "${user.name} rejected", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Reject failed: ${it.message}", Toast.LENGTH_LONG).show()
+            }
     }
 }

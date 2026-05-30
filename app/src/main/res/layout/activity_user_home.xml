@@ -1,22 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:background="@color/app_background">
 
-    <TextView
-        android:text="Welcome User"
-        android:textSize="24sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:gravity="bottom|center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="14dp"
+        android:background="@color/amber">
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout" />
+        <TextView
+            android:id="@+id/topBarTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TechHub"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnProfile"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_menu_manage"
+            app:tint="@color/black" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/cardBrowseProducts"
+                style="@style/HomeSquareCard">
+                <TextView style="@style/HomeCardTitle" android:text="Browse" />
+                <TextView style="@style/HomeCardSubtitle" android:text="Products &amp; filters" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardCart"
+                style="@style/HomeSquareCard">
+                <TextView style="@style/HomeCardTitle" android:text="Cart" />
+                <TextView style="@style/HomeCardSubtitle" android:text="Selected items" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardCheckout"
+                style="@style/HomeSquareCard">
+                <TextView style="@style/HomeCardTitle" android:text="Checkout" />
+                <TextView style="@style/HomeCardSubtitle" android:text="COD order" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardOrders"
+                style="@style/HomeSquareCard">
+                <TextView style="@style/HomeCardTitle" android:text="Orders" />
+                <TextView style="@style/HomeCardSubtitle" android:text="Order history" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardPhoneFinder"
+                style="@style/HomeSquareCard">
+                <TextView style="@style/HomeCardTitle" android:text="Phone Finder" />
+                <TextView style="@style/HomeCardSubtitle" android:text="GSMArena style" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardPcBuilder"
+                style="@style/HomeSquareCard">
+                <TextView style="@style/HomeCardTitle" android:text="PC Builder" />
+                <TextView style="@style/HomeCardSubtitle" android:text="Compatibility" />
+            </LinearLayout>
+
+        </GridLayout>
+    </ScrollView>
 
 </LinearLayout>

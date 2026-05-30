@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/soft_white">
+
+    <include layout="@layout/layout_top_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView android:text="CPU" style="@style/PcBuilderLabel" />
+            <Spinner android:id="@+id/spinnerCpu" style="@style/PcBuilderSpinner" />
+
+            <TextView android:text="Motherboard" style="@style/PcBuilderLabel" />
+            <Spinner android:id="@+id/spinnerMobo" style="@style/PcBuilderSpinner" />
+
+            <TextView android:text="RAM" style="@style/PcBuilderLabel" />
+            <Spinner android:id="@+id/spinnerRam" style="@style/PcBuilderSpinner" />
+
+            <TextView android:text="GPU" style="@style/PcBuilderLabel" />
+            <Spinner android:id="@+id/spinnerGpu" style="@style/PcBuilderSpinner" />
+
+            <TextView android:text="PSU" style="@style/PcBuilderLabel" />
+            <Spinner android:id="@+id/spinnerPsu" style="@style/PcBuilderSpinner" />
+
+            <TextView android:text="Casing" style="@style/PcBuilderLabel" />
+            <Spinner android:id="@+id/spinnerCasing" style="@style/PcBuilderSpinner" />
+
+            <TextView android:text="Storage" style="@style/PcBuilderLabel" />
+            <Spinner android:id="@+id/spinnerStorage" style="@style/PcBuilderSpinner" />
+
+            <Button
+                android:id="@+id/btnCheckCompatibility"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_button_black"
+                android:text="Check Compatibility"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/txtCompatibilityResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_dashboard_card"
+                android:padding="18dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

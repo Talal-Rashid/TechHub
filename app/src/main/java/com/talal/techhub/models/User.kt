@@ -2,9 +2,10 @@ package com.talal.techhub.models
 
 data class User(
     var id: String? = null,
-    val uid: String = "",
-    val name: String = "",
-    val email: String = "",
-    val userType: String = "",
-    val approved: Boolean = false
+    var uid: String = "",
+    var name: String = "",
+    var email: String = "",
+    var phone: String = "",
+    var role: String = "",
+    var approved: Boolean = false
 )

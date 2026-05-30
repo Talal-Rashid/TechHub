@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background">
+
+    <include layout="@layout/layout_top_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/txtOrderSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_dashboard_card"
+            android:padding="18dp"
+            android:text="Order Summary"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/addressEditText"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="14dp"
+            android:hint="Delivery address"
+            android:padding="14dp"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text"
+            android:background="@drawable/bg_dashboard_card" />
+
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:hint="Phone number"
+            android:inputType="phone"
+            android:padding="14dp"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text"
+            android:background="@drawable/bg_dashboard_card" />
+
+        <RadioGroup
+            android:id="@+id/paymentMethodGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_dashboard_card"
+            android:padding="14dp">
+
+            <RadioButton
+                android:id="@+id/radioCod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Cash on Delivery"
+                android:textColor="@color/primary_text" />
+
+            <RadioButton
+                android:id="@+id/radioOnlineLater"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Online Payment - Coming Later"
+                android:textColor="@color/secondary_text" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnPlaceOrder"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_button_black"
+            android:text="Place COD Order"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>
