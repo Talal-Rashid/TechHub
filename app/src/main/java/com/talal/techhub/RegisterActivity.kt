@@ -10,6 +10,9 @@ import com.google.firebase.database.FirebaseDatabase
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private val database = FirebaseDatabase
+        .getInstance("https://techhub-f054e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        .getReference("users")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,27 +20,36 @@ class RegisterActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val etName = findViewById<EditText>(R.id.etName)
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etPhone = findViewById<EditText>(R.id.etPhone)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
-        val spinner = findViewById<Spinner>(R.id.spinnerRole)
-        val btnRegister = findViewById<Button>(R.id.btnRegister)
+        val nameField = findViewById<EditText>(R.id.nameEditText)
+        val emailField = findViewById<EditText>(R.id.emailEditText)
+        val phoneField = findViewById<EditText>(R.id.phoneEditText)
+        val passwordField = findViewById<EditText>(R.id.passwordEditText)
+        val confirmPasswordField = findViewById<EditText>(R.id.confirmPasswordEditText)
+        val roleSpinner = findViewById<Spinner>(R.id.roleSpinner)
+        val registerButton = findViewById<Button>(R.id.registerButton)
+        val loginButton = findViewById<Button>(R.id.loginButton)
 
-        val roles = arrayOf("User", "Vendor", "Admin")
-        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, roles)
+        val roles = arrayOf("user", "vendor")
+        roleSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, roles)
 
-        btnRegister.setOnClickListener {
-            val name = etName.text.toString().trim()
-            val email = etEmail.text.toString().trim()
-            val phone = etPhone.text.toString().trim()
-            val password = etPassword.text.toString()
-            val confirmPassword = etConfirmPassword.text.toString()
-            val role = spinner.selectedItem.toString()
+        loginButton.setOnClickListener {
+            finish()
+        }
 
-            if (name.isEmpty() || email.isEmpty() || phone.isEmpty() ||
-                password.isEmpty() || confirmPassword.isEmpty()
+        registerButton.setOnClickListener {
+            val name = nameField.text.toString().trim()
+            val email = emailField.text.toString().trim()
+            val phone = phoneField.text.toString().trim()
+            val password = passwordField.text.toString().trim()
+            val confirmPassword = confirmPasswordField.text.toString().trim()
+            val role = roleSpinner.selectedItem.toString()
+
+            if (
+                name.isEmpty() ||
+                email.isEmpty() ||
+                phone.isEmpty() ||
+                password.isEmpty() ||
+                confirmPassword.isEmpty()
             ) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -48,48 +60,43 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Hardcoded master admin check
-            val masterAdminEmail = "admin@techhub.com"
-            val masterAdminPassword = "admin123"
-
-            if (role == "Admin" && (email != masterAdminEmail || password != masterAdminPassword)) {
-                Toast.makeText(this, "Only master admin can register here", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
             auth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    val uid = auth.currentUser?.uid ?: return@addOnSuccessListener
-                    val userData = mapOf(
+                .addOnSuccessListener { result ->
+                    val uid = result.user?.uid
+
+                    if (uid == null) {
+                        Toast.makeText(this, "Registration failed. User ID missing.", Toast.LENGTH_SHORT).show()
+                        return@addOnSuccessListener
+                    }
+
+                    val userRecord = mapOf(
+                        "uid" to uid,
                         "name" to name,
                         "email" to email,
                         "phone" to phone,
                         "role" to role,
-                        "approved" to if (role == "User" || role == "Admin") true else false
+                        "approved" to (role == "user")
                     )
 
-                    FirebaseDatabase.getInstance().getReference("users")
-                        .child(uid)
-                        .setValue(userData)
+                    database.child(uid).setValue(userRecord)
                         .addOnSuccessListener {
-                            Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show()
-
-                            when {
-                                role == "Admin" -> startActivity(Intent(this, AdminPanelActivity::class.java))
-                                role == "Vendor" -> {
-                                    Toast.makeText(this, "Waiting for Admin Approval", Toast.LENGTH_LONG).show()
-                                    startActivity(Intent(this, LoginActivity::class.java))
-                                }
-                                else -> startActivity(Intent(this, UserHomeActivity::class.java))
+                            if (role == "vendor") {
+                                Toast.makeText(this, "Vendor registered. Waiting for admin approval.", Toast.LENGTH_LONG).show()
+                                auth.signOut()
+                                startActivity(Intent(this, LoginActivity::class.java))
+                                finish()
+                            } else {
+                                Toast.makeText(this, "Account created and saved to DB", Toast.LENGTH_LONG).show()
+                                startActivity(Intent(this, UserHomeActivity::class.java))
+                                finish()
                             }
-                            finish()
                         }
                         .addOnFailureListener {
-                            Toast.makeText(this, "Failed to save user: ${it.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Failed to save user: ${it.message}", Toast.LENGTH_LONG).show()
                         }
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "Registration Failed: ${it.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Registration failed: ${it.message}", Toast.LENGTH_LONG).show()
                 }
         }
     }

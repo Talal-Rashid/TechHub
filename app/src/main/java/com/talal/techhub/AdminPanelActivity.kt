@@ -9,6 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import com.talal.techhub.adapters.AdminUserAdapter
 import com.talal.techhub.models.User
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.ktx.database
+
 
 class AdminPanelActivity : AppCompatActivity() {
 
@@ -21,6 +25,7 @@ class AdminPanelActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
+        FirebaseDatabase.getInstance().reference // ✅ Force DB module to initialize
 
         logoutBtn = findViewById(R.id.btnLogout)
         logoutBtn.setOnClickListener {

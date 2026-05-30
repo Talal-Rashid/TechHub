@@ -3,30 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:padding="24dp">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TechHub Login"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
+
     <EditText
-        android:id="@+id/etEmail"
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="Email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/etPassword"
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/btnLogin"
-        android:text="Login"
+        android:id="@+id/loginButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Login" />
 
     <Button
-        android:id="@+id/btnGotoRegister"
-        android:text="Register"
+        android:id="@+id/signupButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Create New Account" />
+
 </LinearLayout>

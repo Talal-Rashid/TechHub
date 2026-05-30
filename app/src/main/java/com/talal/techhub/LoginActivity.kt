@@ -2,94 +2,101 @@ package com.talal.techhub
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.*
+import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var dbRef: DatabaseReference
+    private val database = FirebaseDatabase
+        .getInstance("https://techhub-f054e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        .getReference("users")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
-        dbRef = FirebaseDatabase.getInstance().getReference("users")
 
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val emailField = findViewById<EditText>(R.id.emailEditText)
+        val passwordField = findViewById<EditText>(R.id.passwordEditText)
+        val loginButton = findViewById<Button>(R.id.loginButton)
+        val signupButton = findViewById<Button>(R.id.signupButton)
 
-        btnLogin.setOnClickListener {
-            val email = etEmail.text.toString().trim()
-            val password = etPassword.text.toString().trim()
+        signupButton.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
+        loginButton.setOnClickListener {
+            val email = emailField.text.toString().trim()
+            val password = passwordField.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val btnGotoRegister = findViewById<Button>(R.id.btnGotoRegister)
-            btnGotoRegister.setOnClickListener {
-                val intent = Intent(this, RegisterActivity::class.java)
-                startActivity(intent)
-            }
+            Toast.makeText(this, "Trying login...", Toast.LENGTH_SHORT).show()
 
             auth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener { authResult ->
-                    val uid = authResult.user?.uid ?: return@addOnSuccessListener
+                .addOnSuccessListener { result ->
+                    val uid = result.user?.uid
 
-                    dbRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
+                    Toast.makeText(this, "Auth success. UID: $uid", Toast.LENGTH_LONG).show()
+                    Log.d("LOGIN_DEBUG", "Auth UID: $uid")
+
+                    if (uid == null) {
+                        Toast.makeText(this, "Login failed. UID missing.", Toast.LENGTH_LONG).show()
+                        return@addOnSuccessListener
+                    }
+
+                    database.child(uid).get()
+                        .addOnSuccessListener { snapshot ->
                             if (!snapshot.exists()) {
-                                Toast.makeText(this@LoginActivity, "User data not found", Toast.LENGTH_SHORT).show()
-                                return
+                                Toast.makeText(this, "User DB record not found for UID: $uid", Toast.LENGTH_LONG).show()
+                                auth.signOut()
+                                return@addOnSuccessListener
                             }
 
                             val role = snapshot.child("role").getValue(String::class.java)
+                                ?.trim()
+                                ?.lowercase()
+                                ?: "user"
+
                             val approved = snapshot.child("approved").getValue(Boolean::class.java) ?: false
 
-                            when (role) {
-                                "Admin" -> {
-                                    startActivity(Intent(this@LoginActivity, AdminPanelActivity::class.java))
-                                    finish()
-                                }
-                                "Vendor" -> {
-                                    if (approved) {
-                                        startActivity(Intent(this@LoginActivity, VendorPanelActivity::class.java))
-                                        finish()
-                                    } else {
-                                        Toast.makeText(this@LoginActivity, "Vendor not approved yet", Toast.LENGTH_LONG).show()
-                                        auth.signOut()
-                                    }
-                                }
-                                "User" -> {
-                                    startActivity(Intent(this@LoginActivity, UserHomeActivity::class.java))
-                                    finish()
-                                }
-                                else -> {
-                                    Toast.makeText(this@LoginActivity, "Unknown role", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
+                            Toast.makeText(this, "Role: $role | Approved: $approved", Toast.LENGTH_LONG).show()
+                            Log.d("LOGIN_DEBUG", "Role: $role, Approved: $approved")
 
-                        override fun onCancelled(error: DatabaseError) {
-                            Toast.makeText(this@LoginActivity, "DB error: ${error.message}", Toast.LENGTH_SHORT).show()
+                            if (role == "vendor" && !approved) {
+                                Toast.makeText(this, "Vendor waiting for admin approval", Toast.LENGTH_LONG).show()
+                                auth.signOut()
+                                return@addOnSuccessListener
+                            }
+
+                            val destination = when (role) {
+                                "admin" -> AdminPanelActivity::class.java
+                                "vendor" -> VendorPanelActivity::class.java
+                                else -> UserHomeActivity::class.java
+                            }
+
+                            startActivity(Intent(this, destination))
+                            finish()
                         }
-                    })
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Database error: ${it.message}", Toast.LENGTH_LONG).show()
+                            Log.e("LOGIN_DEBUG", "Database error", it)
+                        }
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "Login failed: ${it.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Auth failed: ${it.message}", Toast.LENGTH_LONG).show()
+                    Log.e("LOGIN_DEBUG", "Auth failed", it)
                 }
         }
-        val btnGotoRegister = findViewById<Button>(R.id.btnGotoRegister)
-        btnGotoRegister.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-
     }
 }

@@ -5,53 +5,69 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:gravity="center"
         android:padding="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Account"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
         <EditText
-            android:id="@+id/etName"
+            android:id="@+id/nameEditText"
             android:hint="Full Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/etEmail"
+            android:id="@+id/emailEditText"
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/etPhone"
+            android:id="@+id/phoneEditText"
             android:hint="Phone Number"
             android:inputType="phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/passwordEditText"
             android:hint="Password"
             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/etConfirmPassword"
+            android:id="@+id/confirmPasswordEditText"
             android:hint="Confirm Password"
             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Spinner
-            android:id="@+id/spinnerRole"
+            android:id="@+id/roleSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btnRegister"
-            android:text="Register"
+            android:id="@+id/registerButton"
+            android:text="Signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:text="Back to Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </ScrollView>
