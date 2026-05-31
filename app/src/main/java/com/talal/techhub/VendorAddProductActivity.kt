@@ -32,6 +32,7 @@ class VendorAddProductActivity : AppCompatActivity() {
         stockField = findViewById(R.id.productStockEditText)
         descriptionField = findViewById(R.id.productDescriptionEditText)
 
+
         categorySpinner = findViewById(R.id.categorySpinner)
         subCategorySpinner = findViewById(R.id.subCategorySpinner)
         specsBox = findViewById(R.id.specsEditText)
@@ -97,7 +98,9 @@ class VendorAddProductActivity : AppCompatActivity() {
             stock = stockField.text.toString().toIntOrNull() ?: 0,
             description = descriptionField.text.toString().trim(),
             specs = specs,
-            active = true
+            active = true,
+            createdAt = System.currentTimeMillis(),
+            updatedAt = System.currentTimeMillis()
         )
 
         FirebaseRefs.products.child(productId).setValue(product)

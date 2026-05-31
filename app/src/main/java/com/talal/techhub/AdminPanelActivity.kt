@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.auth.FirebaseAuth
 import android.content.Intent
 import android.widget.ImageView
+import android.widget.LinearLayout
 
 class AdminPanelActivity : AppCompatActivity() {
 
@@ -24,6 +25,22 @@ class AdminPanelActivity : AppCompatActivity() {
     private val pendingVendors = mutableListOf<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        findViewById<LinearLayout>(R.id.cardInviteSubAdmin).setOnClickListener {
+            startActivity(Intent(this, InviteSubAdminActivity::class.java))
+        }
+
+        findViewById<LinearLayout>(R.id.cardAdminAddProduct).setOnClickListener {
+            startActivity(Intent(this, VendorAddProductActivity::class.java))
+        }
+
+        findViewById<LinearLayout>(R.id.cardReviewProducts).setOnClickListener {
+            startActivity(Intent(this, AdminReviewProductsActivity::class.java))
+        }
+
+        findViewById<LinearLayout>(R.id.cardPcBuildOrders).setOnClickListener {
+            startActivity(Intent(this, AdminPcBuildOrdersActivity::class.java))
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
 

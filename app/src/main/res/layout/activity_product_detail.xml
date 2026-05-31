@@ -54,6 +54,16 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txtReviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_dashboard_card"
+                android:padding="18dp"
+                android:text="Reviews"
+                android:textColor="@color/primary_text"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/txtStockStatus"

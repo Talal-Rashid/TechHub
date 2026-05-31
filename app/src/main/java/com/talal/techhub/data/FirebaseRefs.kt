@@ -12,4 +12,9 @@ object FirebaseRefs {
     val products = db.getReference("products")
     val carts = db.getReference("carts")
     val orders = db.getReference("orders")
+
+    val pcBuildOrders = db.getReference("pcBuildOrders")
+    val vendorComponentOrders = db.getReference("vendorComponentOrders")
+    val adminInvites = db.getReference("adminInvites")
+    val reviews = db.getReference("reviews")
 }

@@ -31,11 +31,13 @@ class VendorOrdersActivity : AppCompatActivity() {
             .addOnSuccessListener { snapshot ->
                 container.removeAllViews()
 
-                val orders = snapshot.children.mapNotNull { it.getValue(Order::class.java) }
-                    .filter { order ->
-                        order.items.any { it.vendorId == vendorId }
-                    }
-                    .sortedByDescending { it.createdAt }
+                val orders = snapshot.children.mapNotNull {
+                    it.getValue(Order::class.java)
+                }.filter { order ->
+                    order.items.any { it.vendorId == vendorId }
+                }.sortedByDescending {
+                    it.createdAt
+                }
 
                 if (orders.isEmpty()) {
                     addPlainText("No orders for your products yet.")
@@ -46,6 +48,9 @@ class VendorOrdersActivity : AppCompatActivity() {
                     addOrderCard(order, vendorId)
                 }
             }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load orders: ${it.message}", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun addOrderCard(order: Order, vendorId: String) {
@@ -55,28 +60,61 @@ class VendorOrdersActivity : AppCompatActivity() {
         val vendorItems = order.items.filter { it.vendorId == vendorId }
         val vendorTotal = vendorItems.sumOf { it.price * it.quantity }
 
-        val text = """
-            Order ID: ${order.id}
-            Date: $date
-            
-            Your Items:
-            ${vendorItems.joinToString("\n") { "- ${it.title} x${it.quantity} = Rs ${it.price * it.quantity}" }}
-            
-            Vendor Total: Rs $vendorTotal
-            Order Status: ${order.orderStatus}
-            Payment: ${order.paymentMethod}
-            Payment Status: ${order.paymentStatus}
-            
-            Customer Phone: ${order.phone}
-            Delivery Address: ${order.address}
-        """.trimIndent()
-
-        val card = TextView(this).apply {
-            this.text = text
-            textSize = 15f
-            setTextColor(getColor(R.color.primary_text))
+        val card = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
             setPadding(24, 24, 24, 24)
             setBackgroundResource(R.drawable.bg_dashboard_card)
+        }
+
+        val info = TextView(this).apply {
+            text = """
+                Order ID: ${order.id}
+                Date: $date
+                
+                Your Items:
+                ${vendorItems.joinToString("\n") { "- ${it.title} x${it.quantity} = Rs ${it.price * it.quantity}" }}
+                
+                Vendor Total: Rs $vendorTotal
+                Order Status: ${order.orderStatus}
+                Payment: ${order.paymentMethod}
+                Payment Status: ${order.paymentStatus}
+                
+                Customer Phone: ${order.phone}
+                Delivery Address: ${order.address}
+            """.trimIndent()
+            textSize = 15f
+            setTextColor(getColor(R.color.primary_text))
+        }
+
+        val markPacked = Button(this).apply {
+            text = "Mark Packed"
+            setOnClickListener {
+                FirebaseRefs.orders.child(order.id).child("orderStatus")
+                    .setValue("packed_by_vendor")
+                    .addOnSuccessListener {
+                        Toast.makeText(this@VendorOrdersActivity, "Order marked packed", Toast.LENGTH_SHORT).show()
+                        loadVendorOrders()
+                    }
+            }
+        }
+
+        val markShipped = Button(this).apply {
+            text = "Mark Shipped"
+            setOnClickListener {
+                FirebaseRefs.orders.child(order.id).child("orderStatus")
+                    .setValue("shipped")
+                    .addOnSuccessListener {
+                        Toast.makeText(this@VendorOrdersActivity, "Order marked shipped", Toast.LENGTH_SHORT).show()
+                        loadVendorOrders()
+                    }
+            }
+        }
+
+        card.addView(info)
+
+        if (order.orderStatus != "delivered" && order.orderStatus != "cancelled") {
+            card.addView(markPacked)
+            card.addView(markShipped)
         }
 
         val params = LinearLayout.LayoutParams(

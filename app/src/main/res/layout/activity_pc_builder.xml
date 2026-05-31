@@ -48,6 +48,15 @@
                 android:text="Check Compatibility"
                 android:textColor="@color/white" />
 
+            <Button
+                android:id="@+id/btnPlacePcBuildOrder"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_button_amber"
+                android:text="Place Custom PC Build Order"
+                android:textColor="@color/black" />
+
             <TextView
                 android:id="@+id/txtCompatibilityResult"
                 android:layout_width="match_parent"

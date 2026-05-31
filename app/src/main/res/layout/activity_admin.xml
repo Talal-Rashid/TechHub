@@ -69,6 +69,34 @@
                     <TextView style="@style/HomeCardSubtitle" android:text="Moderation" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/cardInviteSubAdmin"
+                    style="@style/HomeSquareCard">
+                    <TextView style="@style/HomeCardTitle" android:text="Sub Admins" />
+                    <TextView style="@style/HomeCardSubtitle" android:text="Invite by email" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardAdminAddProduct"
+                    style="@style/HomeSquareCard">
+                    <TextView style="@style/HomeCardTitle" android:text="Add Product" />
+                    <TextView style="@style/HomeCardSubtitle" android:text="Admin listing" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardReviewProducts"
+                    style="@style/HomeSquareCard">
+                    <TextView style="@style/HomeCardTitle" android:text="Review Products" />
+                    <TextView style="@style/HomeCardSubtitle" android:text="Recently updated" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardPcBuildOrders"
+                    style="@style/HomeSquareCard">
+                    <TextView style="@style/HomeCardTitle" android:text="PC Builds" />
+                    <TextView style="@style/HomeCardSubtitle" android:text="Assembly orders" />
+                </LinearLayout>
+
             </GridLayout>
 
             <TextView

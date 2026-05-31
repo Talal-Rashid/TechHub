@@ -29,6 +29,8 @@
         <activity android:name=".OrderHistoryActivity" />
         <activity android:name=".VendorOrdersActivity" />
         <activity android:name=".SettingsActivity" />
+        <activity android:name=".AddReviewActivity" />
+        <activity android:name=".AdminOrdersActivity" />
 
 
 

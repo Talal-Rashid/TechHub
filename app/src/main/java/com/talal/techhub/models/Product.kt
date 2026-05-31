@@ -12,5 +12,7 @@ data class Product(
     var description: String = "",
     var imageUrl: String = "",
     var specs: Map<String, String> = emptyMap(),
-    var active: Boolean = true
+    var active: Boolean = true,
+    var createdAt: Long = 0L,
+    var updatedAt: Long = 0L
 )

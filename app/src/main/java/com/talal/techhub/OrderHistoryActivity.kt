@@ -1,5 +1,6 @@
 package com.talal.techhub
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,11 @@ class OrderHistoryActivity : AppCompatActivity() {
         loadOrders()
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadOrders()
+    }
+
     private fun loadOrders() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -36,8 +42,11 @@ class OrderHistoryActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
 
-                val orders = snapshot.children.mapNotNull { it.getValue(Order::class.java) }
-                    .sortedByDescending { it.createdAt }
+                val orders = snapshot.children.mapNotNull {
+                    it.getValue(Order::class.java)
+                }.sortedByDescending {
+                    it.createdAt
+                }
 
                 for (order in orders) {
                     addOrderCard(order)
@@ -83,6 +92,28 @@ class OrderHistoryActivity : AppCompatActivity() {
         params.setMargins(0, 0, 0, 14)
 
         ordersContainer.addView(card, params)
+
+        if (order.orderStatus == "delivered") {
+            addReviewButtons(order)
+        }
+    }
+
+    private fun addReviewButtons(order: Order) {
+        order.items.forEach { item ->
+            val reviewBtn = Button(this).apply {
+                text = "Review ${item.title}"
+                setOnClickListener {
+                    startActivity(
+                        Intent(this@OrderHistoryActivity, AddReviewActivity::class.java)
+                            .putExtra("productId", item.productId)
+                            .putExtra("productTitle", item.title)
+                            .putExtra("orderId", order.id)
+                    )
+                }
+            }
+
+            ordersContainer.addView(reviewBtn)
+        }
     }
 
     private fun addPlainText(text: String) {
