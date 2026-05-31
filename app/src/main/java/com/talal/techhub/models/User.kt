@@ -7,5 +7,6 @@ data class User(
     var email: String = "",
     var phone: String = "",
     var role: String = "",
-    var approved: Boolean = false
+    var approved: Boolean = false,
+    var permissions: Map<String, Boolean> = emptyMap()
 )

@@ -56,6 +56,14 @@
             android:id="@+id/roleSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/inviteCodeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sub-admin invite code"
+            android:visibility="gone"
+            android:inputType="text"
+            android:layout_marginTop="10dp" />
 
         <Button
             android:id="@+id/registerButton"

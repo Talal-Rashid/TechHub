@@ -80,7 +80,9 @@ class LoginActivity : AppCompatActivity() {
                             }
 
                             val destination = when (role) {
+                                "master_admin" -> AdminPanelActivity::class.java
                                 "admin" -> AdminPanelActivity::class.java
+                                "sub_admin" -> AdminPanelActivity::class.java
                                 "vendor" -> VendorPanelActivity::class.java
                                 else -> UserHomeActivity::class.java
                             }

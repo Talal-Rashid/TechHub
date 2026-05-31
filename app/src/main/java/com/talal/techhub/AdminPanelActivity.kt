@@ -1,22 +1,23 @@
 package com.talal.techhub
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.talal.techhub.adapters.AdminUserAdapter
-import com.talal.techhub.data.FirebaseRefs
-import com.talal.techhub.models.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.auth.FirebaseAuth
-import android.content.Intent
-import android.widget.ImageView
-import android.widget.LinearLayout
+import com.talal.techhub.adapters.AdminUserAdapter
+import com.talal.techhub.data.FirebaseRefs
+import com.talal.techhub.models.User
+import com.talal.techhub.utils.PermissionUtils
 
 class AdminPanelActivity : AppCompatActivity() {
 
@@ -25,6 +26,14 @@ class AdminPanelActivity : AppCompatActivity() {
     private val pendingVendors = mutableListOf<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_admin)
+
+        findViewById<TextView>(R.id.topBarTitle).text = "Admin"
+
+        findViewById<ImageView>(R.id.btnProfile).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
 
         findViewById<LinearLayout>(R.id.cardInviteSubAdmin).setOnClickListener {
             startActivity(Intent(this, InviteSubAdminActivity::class.java))
@@ -41,13 +50,9 @@ class AdminPanelActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.cardPcBuildOrders).setOnClickListener {
             startActivity(Intent(this, AdminPcBuildOrdersActivity::class.java))
         }
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_admin)
 
-        findViewById<TextView>(R.id.topBarTitle).text = "TechHub"
-        findViewById<TextView>(R.id.topBarTitle).text = "Admin"
-        findViewById<ImageView>(R.id.btnProfile).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        findViewById<LinearLayout>(R.id.cardAdminOrders).setOnClickListener {
+            startActivity(Intent(this, AdminOrdersActivity::class.java))
         }
 
         recyclerView = findViewById(R.id.recyclerViewPendingUsers)
@@ -61,13 +66,38 @@ class AdminPanelActivity : AppCompatActivity() {
 
         recyclerView.adapter = adapter
 
-        findViewById<Button>(R.id.btnLogout).setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        }
-
+        applyAdminPermissions()
         loadPendingVendors()
+    }
+
+    private fun applyAdminPermissions() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        FirebaseRefs.users.child(uid).get()
+            .addOnSuccessListener { snapshot ->
+                val currentUser = snapshot.getValue(User::class.java) ?: return@addOnSuccessListener
+
+                val isMaster = currentUser.role == "master_admin" || currentUser.role == "admin"
+
+                if (isMaster) return@addOnSuccessListener
+
+                findViewById<LinearLayout>(R.id.cardInviteSubAdmin).visibility = View.GONE
+
+                findViewById<LinearLayout>(R.id.cardVendorApprovals).visibility =
+                    if (PermissionUtils.hasPermission(currentUser, PermissionUtils.MANAGE_VENDORS)) View.VISIBLE else View.GONE
+
+                findViewById<LinearLayout>(R.id.cardAdminProducts).visibility =
+                    if (PermissionUtils.hasPermission(currentUser, PermissionUtils.MANAGE_PRODUCTS)) View.VISIBLE else View.GONE
+
+                findViewById<LinearLayout>(R.id.cardReviewProducts).visibility =
+                    if (PermissionUtils.hasPermission(currentUser, PermissionUtils.HIDE_PRODUCTS)) View.VISIBLE else View.GONE
+
+                findViewById<LinearLayout>(R.id.cardAdminOrders).visibility =
+                    if (PermissionUtils.hasPermission(currentUser, PermissionUtils.MANAGE_ORDERS)) View.VISIBLE else View.GONE
+
+                findViewById<LinearLayout>(R.id.cardPcBuildOrders).visibility =
+                    if (PermissionUtils.hasPermission(currentUser, PermissionUtils.MANAGE_PC_BUILDS)) View.VISIBLE else View.GONE
+            }
     }
 
     private fun loadPendingVendors() {
@@ -88,14 +118,6 @@ class AdminPanelActivity : AppCompatActivity() {
                     }
 
                     adapter.notifyDataSetChanged()
-
-                    if (pendingVendors.isEmpty()) {
-                        Toast.makeText(
-                            this@AdminPanelActivity,
-                            "No pending vendors",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -115,9 +137,6 @@ class AdminPanelActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Toast.makeText(this, "${user.name} approved", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Approval failed: ${it.message}", Toast.LENGTH_LONG).show()
-            }
     }
 
     private fun rejectVendor(user: User) {
@@ -126,9 +145,6 @@ class AdminPanelActivity : AppCompatActivity() {
         FirebaseRefs.users.child(uid).removeValue()
             .addOnSuccessListener {
                 Toast.makeText(this, "${user.name} rejected", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Reject failed: ${it.message}", Toast.LENGTH_LONG).show()
             }
     }
 }
